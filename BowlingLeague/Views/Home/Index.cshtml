@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model IndexViewModel
+
+@foreach (var x in Model.Bowlers)
+{
+    <p>@x.BowlerLastName, @x.BowlerFirstName @x.BowlerMiddleInit</p>
+    <p>@x.BowlerAddress @x.BowlerCity, @x.BowlerState, @x.BowlerZip</p>
+    <p>@x.BowlerPhoneNumber</p>
+    <br />
+    <br />
+}
+
+<div page-info="@Model.PageNumberingInfo" page-url-team="@Model.TeamName">
+</div>
