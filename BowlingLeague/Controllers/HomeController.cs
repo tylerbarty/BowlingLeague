@@ -22,13 +22,32 @@ namespace BowlingLeague.Controllers
             context = ctx;
         }
 
-        public IActionResult Index(long? TeamID, string teamName, int pageNum = 0)
+        public IActionResult Index(long? teamID, string teamName, int pageNum = 0)
         {
-            //int pageSize = 5;
+            int pageSize = 5;
 
-            Bowlers = context.Bowlers.ToList();
+            return View(new IndexViewModel
+            {
+                Bowlers = context.Bowlers
+                .Where(m => m.TeamId == teamID || teamID == null)
+                .OrderBy(m => m.BowlerLastName)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
+                .ToList(),
 
-            return View(bowlers);
+                PageNumberingInfo = new PageNumberingInfo
+                {
+                    NumItemsPerPage = pageSize,
+                    CurrentPage = pageNum,
+
+                    // IF no meal has been seleted, then get the full count.
+                    // Otherwise only count the number from the meal type that has been selected
+                    TotalNumItems = (teamID == null ? context.Bowlers.Count() :
+                        context.Bowlers.Where(x => x.TeamId == teamID).Count())
+                },
+
+                TeamName = teamName
+            });
 
         }
 
